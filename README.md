@@ -61,8 +61,3 @@ sudo nixos-rebuild switch --flake .#nix-uwu
 sudo cp /etc/nixos/configuration.nix.backup /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 ```
-
-## Remember
-- Always run from `/etc/nixos/` directory
-- Test with `dry-build` before `switch`
-- Reboot after major changes
