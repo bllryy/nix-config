@@ -16,6 +16,7 @@ in {
       cargo
       nodejs
       openjdk
+      gcc
       # Add more languages as needed
     ];
   };
