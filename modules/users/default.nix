@@ -10,8 +10,10 @@
 
   # Common programs available to all users
   programs = {
-    firefox.enable = true;
+    #firefox.enable = true;
   };
+
+
 
   # Services
   services = {
@@ -22,6 +24,13 @@
   environment.systemPackages = with pkgs; [
     # Communication
     vesktop
+
+
+	  # browser
+	  librewolf
+
+    # Tor Browser 
+    tor-browser-bundle-bin
     
     # System libraries (consider if these are really needed system-wide)
     appimage-run
