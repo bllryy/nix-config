@@ -1,22 +1,29 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
 { config, pkgs, ... }:
 
 {
   imports =
-    [ 
+    [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./packages/python.nix
       ./packages/packages.nix
+
     ];
 
+  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.initrd.luks.devices."luks-292ab154-4c3a-45cc-aa0a-1fca1ec15a0d".device = "/dev/disk/by-uuid/292ab154-4c3a-45cc-aa0a-1fca1ec15a0d";
-  networking.hostName = "nixos-uwu"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  # KEEP FOR RESEDENTIAL
+  boot.initrd.luks.devices."luks-c919511b-5eda-423d-ae38-ca598b0f2ebc".device = "/dev/disk/by-uuid/c919511b-5eda-423d-ae38-ca598b0f2ebc";
+  networking.hostName = "nixos"; # Define your hostname.
+  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -24,6 +31,7 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Set your time zone.
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -31,60 +39,53 @@
   services.xserver = {
     enable = true;
     autoRepeatDelay = 200;
-    autoRepeatInterval = 35;
-    windowManager.qtile.enable = true;
+    #autoRepeatDelayInterval = 35;
+    windowManager.qtile.enable = true;  
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lily = {
     isNormalUser = true;
     description = "lily";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    #  thunderbird
-    ];
+    packages = with pkgs; [];
   };
 
-  programs.firefox.enable = true;
-
-  programs.nix-ld.enable = true;
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
   environment.systemPackages = with pkgs; [
-     vim
-     wget
-     vesktop
-     vscode
-     gcc
-     cargo
-     python3
-     aircrack-ng
-     rustscan
-     nmap 
-     gobuster
-     macchanger
-     pavucontrol
-     glab
-     nodejs
-     flameshot
-     brightnessctl
-     chromium
-     htop
-     libreoffice
-     pcmanfm
-     obs-studio
-     go
-     arandr
-     fastfetch
-     neovide
+    vim 
+    wget
+    git
+    vesktop
+    firefox
+    vscode
+    hyfetch
+    yazzi
+    helix
   ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Better scheduling for CPU cycles - thanks System76!!! :3
+  services.system76-scheduler.settings.cfsProfiles.enable = true;
 
-  system.stateVersion = "25.05"; 
+  # Enable TLP (better than gnomes internal power manager)
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+    };
+  };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  system.stateVersion = "25.05"; # Did you read the comment?
 
 }
